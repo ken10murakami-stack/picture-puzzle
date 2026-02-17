@@ -1,140 +1,121 @@
-const SIZE = 3;
-const TOTAL_TILES = SIZE * SIZE;
-
-const uploadInput = document.getElementById("imageUpload");
-const shuffleButton = document.getElementById("shuffleButton");
-const resetButton = document.getElementById("resetButton");
-const statusText = document.getElementById("status");
-const puzzle = document.getElementById("puzzle");
-
-let board = [];
-let solvedBoard = [];
-let imageDataUrl = "";
-
-function createSolvedBoard() {
-  const numbers = Array.from({ length: TOTAL_TILES }, (_, i) => i);
-  numbers[numbers.length - 1] = -1;
-  return numbers;
+:root {
+  color-scheme: light;
+  font-family: "Hiragino Kaku Gothic ProN", "Yu Gothic", system-ui, sans-serif;
 }
 
-function renderBoard() {
-  puzzle.innerHTML = "";
-
-  board.forEach((value, index) => {
-    const tile = document.createElement("button");
-    tile.className = "tile";
-    tile.type = "button";
-
-    tile.style.gridColumn = (index % SIZE) + 1;
-    tile.style.gridRow = Math.floor(index / SIZE) + 1;
-
-    if (value === -1) {
-      tile.classList.add("empty");
-      tile.setAttribute("aria-label", "空きマス");
-      tile.disabled = true;
-    } else {
-      const row = Math.floor(value / SIZE);
-      const col = value % SIZE;
-
-      if (imageDataUrl) {
-        tile.style.backgroundImage = `url(${imageDataUrl})`;
-        tile.style.backgroundSize = `${SIZE * 100}% ${SIZE * 100}%`;
-        tile.style.backgroundPosition = `${(col / (SIZE - 1)) * 100}% ${(row / (SIZE - 1)) * 100}%`;
-      } else {
-        tile.classList.add("placeholder");
-        tile.textContent = String(value + 1);
-      }
-
-      tile.setAttribute("aria-label", `タイル ${value + 1}`);
-      tile.addEventListener("click", () => moveTile(index));
-    }
-
-    puzzle.appendChild(tile);
-  });
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, #f0f5ff, #f6fcff);
+  color: #1a2340;
 }
 
-function getMovableIndexes() {
-  const emptyIndex = board.indexOf(-1);
-  const row = Math.floor(emptyIndex / SIZE);
-  const col = emptyIndex % SIZE;
-  const movable = [];
-
-  if (row > 0) movable.push(emptyIndex - SIZE);
-  if (row < SIZE - 1) movable.push(emptyIndex + SIZE);
-  if (col > 0) movable.push(emptyIndex - 1);
-  if (col < SIZE - 1) movable.push(emptyIndex + 1);
-
-  return movable;
+.app {
+  width: min(92vw, 760px);
+  padding: 24px;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 16px 44px rgba(35, 54, 107, 0.14);
 }
 
-function moveTile(tileIndex) {
-  const movable = getMovableIndexes();
-  if (!movable.includes(tileIndex)) return;
-
-  const emptyIndex = board.indexOf(-1);
-  [board[emptyIndex], board[tileIndex]] = [board[tileIndex], board[emptyIndex]];
-  renderBoard();
-
-  if (isSolved()) {
-    statusText.textContent = "クリア！おめでとうございます 🎉";
-  }
+h1 {
+  margin-top: 0;
+  margin-bottom: 8px;
+  font-size: 1.6rem;
 }
 
-function isSolved() {
-  return board.every((value, index) => value === solvedBoard[index]);
+.description {
+  margin-top: 0;
 }
 
-function shuffleBoard(steps = TOTAL_TILES * 30) {
-  board = [...solvedBoard];
-
-  for (let i = 0; i < steps; i += 1) {
-    const movable = getMovableIndexes();
-    const randomTile = movable[Math.floor(Math.random() * movable.length)];
-    const emptyIndex = board.indexOf(-1);
-    [board[emptyIndex], board[randomTile]] = [board[randomTile], board[emptyIndex]];
-  }
-
-  if (isSolved()) {
-    shuffleBoard(steps);
-    return;
-  }
-
-  renderBoard();
-  statusText.textContent = "シャッフルしました。タイルを動かして完成させてください。";
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 12px;
 }
 
-uploadInput.addEventListener("change", (event) => {
-  const [file] = event.target.files;
-  if (!file) return;
+.upload,
+button {
+  border: none;
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: transform 0.15s ease, opacity 0.2s ease;
+}
 
-  const reader = new FileReader();
-  reader.onload = () => {
-    imageDataUrl = String(reader.result);
-    solvedBoard = createSolvedBoard();
-    board = [...solvedBoard];
-    renderBoard();
+.upload {
+  background: #324fa8;
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+}
 
-    shuffleButton.disabled = false;
-    resetButton.disabled = false;
-    statusText.textContent = "画像を読み込みました。シャッフルして開始できます。";
-  };
-
-  reader.readAsDataURL(file);
-});
-
-shuffleButton.addEventListener("click", () => {
-  if (!imageDataUrl) return;
-  shuffleBoard();
-});
-
-resetButton.addEventListener("click", () => {
-  if (!imageDataUrl) return;
-  board = [...solvedBoard];
-  renderBoard();
-  statusText.textContent = "リセットしました。";
-});
+.upload input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
 
 
-solvedBoard = createSolvedBoard();
-board = [...solvedBoard];
-renderBoard();
+button {
+  background: #d8e2ff;
+  color: #1f326f;
+}
+
+button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.upload:hover,
+button:not(:disabled):hover {
+  transform: translateY(-1px);
+}
+
+#status {
+  margin: 8px 0 14px;
+  min-height: 1.4em;
+  font-weight: 600;
+}
+
+.puzzle {
+  width: min(92vw, 620px);
+  aspect-ratio: 1;
+  border: 3px solid #324fa8;
+  border-radius: 10px;
+  margin-inline: auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  overflow: hidden;
+  background: #eef2ff;
+}
+
+.tile {
+  border: 1px solid rgba(255, 255, 255, 0.65);
+  background-repeat: no-repeat;
+  background-size: cover;
+  cursor: pointer;
+}
+
+.tile:focus-visible {
+  outline: 3px solid #ff9f43;
+  outline-offset: -3px;
+}
+
+.empty {
+  background: radial-gradient(circle at center, #dbe4ff, #b7c4f5);
+  cursor: default;
+}
+
+.placeholder {
+  background: linear-gradient(145deg, #cfd9ff, #b7c6f8);
+  color: #1f326f;
+  font-weight: 700;
+  font-size: clamp(1rem, 2.2vw, 1.6rem);
+}
