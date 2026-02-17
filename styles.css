@@ -38,6 +38,7 @@ h1 {
 }
 
 .upload,
+.mode,
 button {
   border: none;
   border-radius: 10px;
@@ -61,6 +62,24 @@ button {
   cursor: pointer;
 }
 
+
+.mode {
+  background: #e8edff;
+  color: #1f326f;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.mode select {
+  border: 1px solid #9fb3f6;
+  background: #fff;
+  border-radius: 8px;
+  padding: 4px 8px;
+  color: #1f326f;
+  font-size: 0.95rem;
+}
+
 button {
   background: #d8e2ff;
   color: #1f326f;
@@ -72,6 +91,7 @@ button:disabled {
 }
 
 .upload:hover,
+.mode:hover,
 button:not(:disabled):hover {
   transform: translateY(-1px);
 }
