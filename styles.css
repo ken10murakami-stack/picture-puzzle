@@ -1,0 +1,113 @@
+:root {
+  color-scheme: light;
+  font-family: "Hiragino Kaku Gothic ProN", "Yu Gothic", system-ui, sans-serif;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, #f0f5ff, #f6fcff);
+  color: #1a2340;
+}
+
+.app {
+  width: min(92vw, 760px);
+  padding: 24px;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 16px 44px rgba(35, 54, 107, 0.14);
+}
+
+h1 {
+  margin-top: 0;
+  margin-bottom: 8px;
+  font-size: 1.6rem;
+}
+
+.description {
+  margin-top: 0;
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.upload,
+button {
+  border: none;
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: transform 0.15s ease, opacity 0.2s ease;
+}
+
+.upload {
+  background: #324fa8;
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+}
+
+.upload input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+button {
+  background: #d8e2ff;
+  color: #1f326f;
+}
+
+button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.upload:hover,
+button:not(:disabled):hover {
+  transform: translateY(-1px);
+}
+
+#status {
+  margin: 8px 0 14px;
+  min-height: 1.4em;
+  font-weight: 600;
+}
+
+.puzzle {
+  width: min(92vw, 620px);
+  aspect-ratio: 1;
+  border: 3px solid #324fa8;
+  border-radius: 10px;
+  margin-inline: auto;
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  grid-template-rows: repeat(10, 1fr);
+  overflow: hidden;
+  background: #eef2ff;
+}
+
+.tile {
+  border: 1px solid rgba(255, 255, 255, 0.65);
+  background-repeat: no-repeat;
+  background-size: 1000% 1000%;
+  cursor: pointer;
+}
+
+.tile:focus-visible {
+  outline: 3px solid #ff9f43;
+  outline-offset: -3px;
+}
+
+.empty {
+  background: radial-gradient(circle at center, #dbe4ff, #b7c4f5);
+  cursor: default;
+}
