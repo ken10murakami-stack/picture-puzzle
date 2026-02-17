@@ -3,26 +3,17 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>画像スライドパズル</title>
+    <title>画像スライドパズル（3×3）</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
     <main class="app">
-      <h1>画像スライドパズル</h1>
+      <h1>画像スライドパズル（3×3）</h1>
       <p id="description" class="description">
-        画像をアップロードすると、5×5（25マス）のスライドパズルを作成します。
+        画像をアップロードすると、3×3（9マス）のスライドパズルを作成します。
       </p>
 
       <div class="controls">
-        <label class="mode">
-          モード
-          <select id="modeSelect" aria-label="パズルサイズ選択">
-            <option value="3">3×3</option>
-            <option value="4">4×4</option>
-            <option value="5" selected>5×5</option>
-          </select>
-        </label>
-
         <label class="upload">
           画像を選択
           <input id="imageUpload" type="file" accept="image/*" />
