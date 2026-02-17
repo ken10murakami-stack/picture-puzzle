@@ -1,4 +1,4 @@
-const SIZE = 10;
+const SIZE = 5;
 
 const uploadInput = document.getElementById("imageUpload");
 const shuffleButton = document.getElementById("shuffleButton");
