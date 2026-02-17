@@ -1,31 +1,20 @@
-let size = 5;
+const SIZE = 3;
+const TOTAL_TILES = SIZE * SIZE;
 
 const uploadInput = document.getElementById("imageUpload");
-const modeSelect = document.getElementById("modeSelect");
 const shuffleButton = document.getElementById("shuffleButton");
 const resetButton = document.getElementById("resetButton");
 const statusText = document.getElementById("status");
-const descriptionText = document.getElementById("description");
 const puzzle = document.getElementById("puzzle");
 
 let board = [];
 let solvedBoard = [];
 let imageDataUrl = "";
 
-function totalTiles() {
-  return size * size;
-}
-
-function updateModeDescription() {
-  descriptionText.textContent = `画像をアップロードすると、${size}×${size}（${totalTiles()}マス）のスライドパズルを作成します。`;
-}
-
-function applySizeToGrid() {
-  puzzle.style.setProperty("--size", String(size));
-}
+puzzle.style.setProperty("--size", String(SIZE));
 
 function createSolvedBoard() {
-  const numbers = Array.from({ length: totalTiles() }, (_, i) => i);
+  const numbers = Array.from({ length: TOTAL_TILES }, (_, i) => i);
   numbers[numbers.length - 1] = -1;
   return numbers;
 }
@@ -38,20 +27,20 @@ function renderBoard() {
     tile.className = "tile";
     tile.type = "button";
 
-    tile.style.gridColumn = (index % size) + 1;
-    tile.style.gridRow = Math.floor(index / size) + 1;
+    tile.style.gridColumn = (index % SIZE) + 1;
+    tile.style.gridRow = Math.floor(index / SIZE) + 1;
 
     if (value === -1) {
       tile.classList.add("empty");
       tile.setAttribute("aria-label", "空きマス");
       tile.disabled = true;
     } else {
-      const row = Math.floor(value / size);
-      const col = value % size;
+      const row = Math.floor(value / SIZE);
+      const col = value % SIZE;
 
       tile.style.backgroundImage = `url(${imageDataUrl})`;
-      tile.style.backgroundSize = `${size * 100}% ${size * 100}%`;
-      tile.style.backgroundPosition = `${(col / (size - 1)) * 100}% ${(row / (size - 1)) * 100}%`;
+      tile.style.backgroundSize = `${SIZE * 100}% ${SIZE * 100}%`;
+      tile.style.backgroundPosition = `${(col / (SIZE - 1)) * 100}% ${(row / (SIZE - 1)) * 100}%`;
       tile.setAttribute("aria-label", `タイル ${value + 1}`);
       tile.addEventListener("click", () => moveTile(index));
     }
@@ -62,14 +51,14 @@ function renderBoard() {
 
 function getMovableIndexes() {
   const emptyIndex = board.indexOf(-1);
-  const row = Math.floor(emptyIndex / size);
-  const col = emptyIndex % size;
+  const row = Math.floor(emptyIndex / SIZE);
+  const col = emptyIndex % SIZE;
   const movable = [];
 
-  if (row > 0) movable.push(emptyIndex - size);
-  if (row < size - 1) movable.push(emptyIndex + size);
+  if (row > 0) movable.push(emptyIndex - SIZE);
+  if (row < SIZE - 1) movable.push(emptyIndex + SIZE);
   if (col > 0) movable.push(emptyIndex - 1);
-  if (col < size - 1) movable.push(emptyIndex + 1);
+  if (col < SIZE - 1) movable.push(emptyIndex + 1);
 
   return movable;
 }
@@ -91,7 +80,7 @@ function isSolved() {
   return board.every((value, index) => value === solvedBoard[index]);
 }
 
-function shuffleBoard(steps = totalTiles() * 30) {
+function shuffleBoard(steps = TOTAL_TILES * 30) {
   board = [...solvedBoard];
 
   for (let i = 0; i < steps; i += 1) {
@@ -108,24 +97,6 @@ function shuffleBoard(steps = totalTiles() * 30) {
 
   renderBoard();
   statusText.textContent = "シャッフルしました。タイルを動かして完成させてください。";
-}
-
-function applyMode(newSize) {
-  size = newSize;
-  applySizeToGrid();
-  updateModeDescription();
-
-  if (!imageDataUrl) {
-    board = [];
-    solvedBoard = [];
-    puzzle.innerHTML = "";
-    return;
-  }
-
-  solvedBoard = createSolvedBoard();
-  board = [...solvedBoard];
-  renderBoard();
-  statusText.textContent = `モードを ${size}×${size} に変更しました。`;
 }
 
 uploadInput.addEventListener("change", (event) => {
@@ -147,12 +118,6 @@ uploadInput.addEventListener("change", (event) => {
   reader.readAsDataURL(file);
 });
 
-modeSelect.addEventListener("change", (event) => {
-  const nextSize = Number(event.target.value);
-  if (![3, 4, 5].includes(nextSize)) return;
-  applyMode(nextSize);
-});
-
 shuffleButton.addEventListener("click", () => {
   if (!imageDataUrl) return;
   shuffleBoard();
@@ -164,5 +129,3 @@ resetButton.addEventListener("click", () => {
   renderBoard();
   statusText.textContent = "リセットしました。";
 });
-
-applyMode(size);
