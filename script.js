@@ -11,8 +11,6 @@ let board = [];
 let solvedBoard = [];
 let imageDataUrl = "";
 
-puzzle.style.setProperty("--size", String(SIZE));
-
 function createSolvedBoard() {
   const numbers = Array.from({ length: TOTAL_TILES }, (_, i) => i);
   numbers[numbers.length - 1] = -1;
@@ -38,9 +36,15 @@ function renderBoard() {
       const row = Math.floor(value / SIZE);
       const col = value % SIZE;
 
-      tile.style.backgroundImage = `url(${imageDataUrl})`;
-      tile.style.backgroundSize = `${SIZE * 100}% ${SIZE * 100}%`;
-      tile.style.backgroundPosition = `${(col / (SIZE - 1)) * 100}% ${(row / (SIZE - 1)) * 100}%`;
+      if (imageDataUrl) {
+        tile.style.backgroundImage = `url(${imageDataUrl})`;
+        tile.style.backgroundSize = `${SIZE * 100}% ${SIZE * 100}%`;
+        tile.style.backgroundPosition = `${(col / (SIZE - 1)) * 100}% ${(row / (SIZE - 1)) * 100}%`;
+      } else {
+        tile.classList.add("placeholder");
+        tile.textContent = String(value + 1);
+      }
+
       tile.setAttribute("aria-label", `タイル ${value + 1}`);
       tile.addEventListener("click", () => moveTile(index));
     }
@@ -129,3 +133,8 @@ resetButton.addEventListener("click", () => {
   renderBoard();
   statusText.textContent = "リセットしました。";
 });
+
+
+solvedBoard = createSolvedBoard();
+board = [...solvedBoard];
+renderBoard();
