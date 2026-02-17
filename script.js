@@ -1,6 +1,8 @@
 const SIZE = 5;
 
 const uploadInput = document.getElementById("imageUpload");
+const TOTAL_TILES = SIZE * SIZE;
+
 const shuffleButton = document.getElementById("shuffleButton");
 const resetButton = document.getElementById("resetButton");
 const statusText = document.getElementById("status");
@@ -10,8 +12,11 @@ let board = [];
 let solvedBoard = [];
 let imageDataUrl = "";
 
+// Ensure visual grid always matches logic size.
+puzzle.style.setProperty("--size", String(SIZE));
+
 function createSolvedBoard() {
-  const numbers = Array.from({ length: SIZE * SIZE }, (_, i) => i);
+  const numbers = Array.from({ length: TOTAL_TILES }, (_, i) => i);
   numbers[numbers.length - 1] = -1;
   return numbers;
 }
@@ -36,6 +41,7 @@ function renderBoard() {
       const col = value % SIZE;
 
       tile.style.backgroundImage = `url(${imageDataUrl})`;
+      tile.style.backgroundSize = `${SIZE * 100}% ${SIZE * 100}%`;
       tile.style.backgroundPosition = `${(col / (SIZE - 1)) * 100}% ${(row / (SIZE - 1)) * 100}%`;
       tile.setAttribute("aria-label", `タイル ${value + 1}`);
       tile.addEventListener("click", () => moveTile(index));
